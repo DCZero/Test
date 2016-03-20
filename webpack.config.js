@@ -9,6 +9,8 @@ const PATHS = {
 	build: path.join(__dirname, 'build')
 };
 
+process.env.BABEL_ENV = TARGET;
+
 const common = {
 	// entry accepts a path or an object of etnries. We'll be using
 	// the latter form given it's convenient with more complex
@@ -18,6 +20,9 @@ const common = {
 	},
 	entry: 	{
 		app: PATHS.app
+	},
+	resolve: {
+		extensions: ['', '.js', '.jsx']
 	},
 	output: {
 		path: PATHS.build,
@@ -34,11 +39,21 @@ const common = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loaders: ['style', 'css'],
+				loader: 'style',
 				include: PATHS.app 
+			},
+			{
+				test: /\.css$/,
+				loader: 'css',
+				include: PATHS.app 
+			},
+			{
+				test: /\.jsx?$/,
+				loader: 'babel?cacheDirectory',
+				include: PATHS.app
 			}
-			]
-	}+
+		],
+	},
 };
 
 // Default
@@ -66,6 +81,7 @@ if(TARGET === 'start' || !TARGET) {
 		]
 	});
 }
+
 if(TARGET === 'build') {
 	module.exports = merge(common, {});
 }
