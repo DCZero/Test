@@ -1,28 +1,13 @@
-import uuid from 'node-uuid';
 import React from 'react';
-
 import Notes from './Notes.jsx';
+
+import NoteActions from '../actions/NoteActions';
+import NoteStore from '../stores/NoteStore';
 
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			notes: [
-			{
-				id:uuid.v4(),
-				task: 'a task'
-			},
-			{
-				id:uuid.v4(),
-				task: 'another task'
-			},
-			{
-				id:uuid.v4(),
-				task: 'a third task'
-			}
-			]
-		};
+		this.state = NoteStore.getState();
 	}
 
 	render() {
@@ -37,43 +22,32 @@ export default class App extends React.Component {
 		);
 	}
 
-	deleteNote(id) {
-		if (!id.trim){
-			return;
-		}
+	componentDidMount() {
+		NoteStore.listen(this.storeChanged.bind(this));
+	}
 
-		
-		this.setState({
-			notes: this.state.notes.filter(n => n.id !== id)
-		});
+	componentWillUnmount() {
+		NoteStore.unlisten(this.storeChanged.bind(this));
+	}
+
+	storeChanged(state) {
+		this.setState(state);
+	}
+
+	deleteNote(id) {
+		NoteActions.delete(id);
 	}
 
 	editNote(id, task) {
-		// if empty..
-		if (!task.trim)
-		{
+		// Don't modify if trying set an empty value
+		if(!task.trim()) {
 			return;
 		}
 
-		const notes = this.state.notes.map(note => {
-			if(note.id === id && task)
-			{
-				note.task = task;
-			}
-
-			return note;
-		});
-
-		this.setState({notes});
+		NoteActions.update({id, task});
 	}
 
 	addNote() {
-		this.setState({
-			// ... is the spread operator
-			notes: [...this.state.notes, {
-				id: uuid.v4(),
-				task: 'a new task'
-			}]
-		});
+		NoteActions.create({task: 'new task'});
 	}
 }
