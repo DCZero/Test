@@ -1,32 +1,18 @@
-import uuid from 'node-uuid';
 import React from 'react';
-
+import { bindActionCreators } from 'redux'
 import Notes from './Notes.jsx';
+import { connect } from 'react-redux'
+import * as Actions from '../actions'
 
-export default class App extends React.Component {
+
+class App extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			notes: [
-			{
-				id:uuid.v4(),
-				task: 'a task'
-			},
-			{
-				id:uuid.v4(),
-				task: 'another task'
-			},
-			{
-				id:uuid.v4(),
-				task: 'a third task'
-			}
-			]
-		};
 	}
 
 	render() {
-		const notes = this.state.notes;
+		const notes = this.props.notes
+
 		return (
 			<div>
 				<button className="add-note" onClick={this.addNote.bind(this)}>+</button>
@@ -38,42 +24,37 @@ export default class App extends React.Component {
 	}
 
 	deleteNote(id) {
-		if (!id.trim){
-			return;
-		}
-
-		
-		this.setState({
-			notes: this.state.notes.filter(n => n.id !== id)
-		});
+		this.props.notesActions.deleteNote(id);
 	}
 
 	editNote(id, task) {
-		// if empty..
-		if (!task.trim)
-		{
-			return;
-		}
-
-		const notes = this.state.notes.map(note => {
-			if(note.id === id && task)
-			{
-				note.task = task;
-			}
-
-			return note;
-		});
-
-		this.setState({notes});
+		this.props.notesActions.editNote(id, task)
+		console.log('got ' + id + ' with ' + task);
 	}
 
 	addNote() {
-		this.setState({
-			// ... is the spread operator
-			notes: [...this.state.notes, {
-				id: uuid.v4(),
-				task: 'a new task'
-			}]
-		});
+		console.log('asked to create note');
+		this.props.notesActions.addNote('Newly Added task');
 	}
 }
+
+App.propTypes = {
+	notes: React.PropTypes.array.isRequired
+}
+
+function mapStateToProps(state) {
+	return {
+		notes: state.notes
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		notesActions: bindActionCreators(Actions, dispatch)
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(App)

@@ -23,7 +23,7 @@ export default function notes(state = initialState, action) {
 		case EDIT_NOTE:
 			return state.map(n => 
 				n.id == action.id ?
-					Object.assign({}, n, { text: action.text }) : n)
+					Object.assign({}, n, { task: action.text }) : n)
 		default:
 			return state
 	}
