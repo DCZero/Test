@@ -5,20 +5,19 @@ import * as NoteActions from '../actions/notes'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-
 class Lane extends React.Component {
 	constructor(props) {
 		super(props);
 	}
 
 	render() {
-		const lane = this.props.laneNotes;
+		const lane = this.props.lane;
 
 		return (
 			<div >
 				<div className="lane-header">
 					<div className="lane-add-note">
-						<button className="add-note" onClick={this.addNote.bind(this)}>+</button>
+						<button className="add-note" onClick={this.addNote.bind(this, lane.id)}>+</button>
 					</div>
 					<div className="lane-name">{lane.name}</div>
 					<Notes notes={this.props.laneNotes} 
@@ -41,16 +40,19 @@ class Lane extends React.Component {
 		this.props.noteActions.editNote(id, task)
 	}
 
-	addNote() {
-		this.props.noteActions.addNote('New Task');
+	addNote(laneId) {
+		const o = this.props.noteActions.addNote('New Task');
+		this.props.laneActions.addToLane(laneId, o.note.id);
 	}
 }
 
 function mapStateToProps(state, props) {
 	return {
-		laneNotes: state.notes//.map(id => state.notes[
-				//state.notes.findIndex(note => note.id === id)
-				//]).filter(note => note)
+		p: props.lane.notes,
+		s: state.notes,
+		laneNotes: props.lane.notes.map(id => state.notes[
+			state.notes.findIndex(note => note.id == id)
+			]).filter(note => note)
 		}
 }
 

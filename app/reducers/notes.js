@@ -14,8 +14,8 @@ export default function notes(state = initialState, action) {
 			console.log('(red:)adding note');
 			return [
 				{
-					id: uuid.v4(),
-					task: action.text
+					id: action.note.id,
+					task: action.note.task
 				},
 				...state
 			]
