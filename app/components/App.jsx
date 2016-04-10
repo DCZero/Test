@@ -1,8 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
-import Notes from './Notes.jsx';
+import Lanes from './Lanes.jsx';
 import { connect } from 'react-redux'
-import * as Actions from '../actions'
+import * as Actions from '../actions/lanes'
 
 
 class App extends React.Component {
@@ -11,46 +11,33 @@ class App extends React.Component {
 	}
 
 	render() {
-		const notes = this.props.notes
-
 		return (
 			<div>
-				<button className="add-note" onClick={this.addNote.bind(this)}>+</button>
-				<Notes notes={notes} 
-						onEdit={this.editNote.bind(this)}
-						onDelete={this.deleteNote.bind(this)} />
+				<button className="add-lane" onClick={this.addLane.bind(this)}>+</button>
+				<Lanes lanes={this.props.lanes} />
 			</div>
 		);
 	}
 
-	deleteNote(id) {
-		this.props.notesActions.deleteNote(id);
-	}
-
-	editNote(id, task) {
-		this.props.notesActions.editNote(id, task)
-		console.log('got ' + id + ' with ' + task);
-	}
-
-	addNote() {
-		console.log('asked to create note');
-		this.props.notesActions.addNote('Newly Added task');
+	addLane() {
+		console.log('Adding Lane');
+		this.props.lanesActions.create({name: 'new lane'});
 	}
 }
 
 App.propTypes = {
-	notes: React.PropTypes.array.isRequired
+	lanes: React.PropTypes.array.isRequired
 }
 
 function mapStateToProps(state) {
 	return {
-		notes: state.notes
+		lanes: state.lanes
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		notesActions: bindActionCreators(Actions, dispatch)
+		lanesActions: bindActionCreators(Actions, dispatch)
 	}
 }
 
