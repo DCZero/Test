@@ -1,4 +1,4 @@
-import { CREATE_LANE, ADD_TO_LANE } from '../constants/ActionTypes';
+import { CREATE_LANE, ADD_TO_LANE, REMOVE_FROM_LANE } from '../constants/ActionTypes';
 import uuid from 'node-uuid';
 
 const initialState = [];
@@ -20,6 +20,21 @@ export default function lanes(state = initialState, action) {
 					return Object.assign({}, l, {
 						notes: [...l.notes, action.noteId]
 					});
+				}
+
+				return l;
+			});
+		case REMOVE_FROM_LANE:
+			return state.map((l) => {
+				if (l.id === action.laneId) {
+					const index = l.notes.indexOf(action.noteId);
+
+					if (index >= 0) {
+						return Object.assign({}, l, {
+							notes: l.notes.filter(n => n.id != action.nodeId)
+							): []
+						});
+					}
 				}
 
 				return l;

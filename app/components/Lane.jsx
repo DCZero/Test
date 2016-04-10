@@ -30,6 +30,7 @@ class Lane extends React.Component {
 
 	deleteNote(id) {
 		this.props.noteActions.deleteNote(id);
+		this.props.laneActions.removeFromLane(id);
 	}
 
 	editNote(id, task) {
@@ -48,8 +49,6 @@ class Lane extends React.Component {
 
 function mapStateToProps(state, props) {
 	return {
-		p: props.lane.notes,
-		s: state.notes,
 		laneNotes: props.lane.notes.map(id => state.notes[
 			state.notes.findIndex(note => note.id == id)
 			]).filter(note => note)
