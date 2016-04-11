@@ -1,12 +1,6 @@
 import { ADD_NOTE, DELETE_NOTE, EDIT_NOTE } from '../constants/ActionTypes'
-import uuid from 'node-uuid'
 
-const initialState = [
-	{
-		task: 'Use Redux',
-		id: uuid.v4()
-	}
-]
+const initialState = []
 
 export default function notes(state = initialState, action) {
 	switch (action.type) {

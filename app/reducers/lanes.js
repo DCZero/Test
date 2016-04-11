@@ -6,6 +6,7 @@ const initialState = [];
 export default function lanes(state = initialState, action) {
 	switch (action.type) {
 		case ADD_TO_LANE:
+			console.log('(red:)Adding note ' + action.noteId + ' to lane ' + action.laneId)
 			return state.map((l) => {
 				const index = l.notes.indexOf(action.noteId);
 
@@ -25,14 +26,14 @@ export default function lanes(state = initialState, action) {
 				return l;
 			});
 		case REMOVE_FROM_LANE:
+			console.log('(red:)removing  ' + action.noteId + ' to lane ' + action.laneId)
 			return state.map((l) => {
 				if (l.id === action.laneId) {
 					const index = l.notes.indexOf(action.noteId);
 
 					if (index >= 0) {
 						return Object.assign({}, l, {
-							notes: l.notes.filter(n => n.id != action.nodeId)
-							): []
+							notes: l.notes.filter(n => n.id != action.noteId)
 						});
 					}
 				}

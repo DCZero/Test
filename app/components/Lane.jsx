@@ -22,15 +22,16 @@ class Lane extends React.Component {
 					<div className="lane-name">{lane.name}</div>
 					<Notes notes={this.props.laneNotes} 
 							onEdit={this.editNote.bind(this)}
-							onDelete={this.deleteNote.bind(this)}/>
+							onDelete={this.deleteNote.bind(this, lane.id)}/>
 				</div>
 			</div>
 		);
 	}
 
-	deleteNote(id) {
-		this.props.noteActions.deleteNote(id);
-		this.props.laneActions.removeFromLane(id);
+	deleteNote(taskId, laneId) {
+		this.props.noteActions.deleteNote(taskId);
+		console.log('laneId: ' + laneId);
+		//this.props.laneActions.removeFromLane(taskId, laneId);
 	}
 
 	editNote(id, task) {
